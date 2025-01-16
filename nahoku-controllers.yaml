@@ -1,0 +1,38 @@
+k8s_admin:
+  hosts:
+    haku:
+      ansible_connection: "local"
+
+k8s_initial_master:
+  hosts:
+    k8s-cp1:
+
+k8s_ha_masters:
+  hosts:
+    k8s-cp[2:3]:
+
+k8s_control_plane:
+  children:
+    k8s_initial_master:
+    k8s_ha_masters:
+
+k8s_kubectl:
+  children:
+    k8s_admin:
+    
+k8s_ca:
+  children:
+    k8s_admin:
+    
+k8s_etcd:
+  children:
+    k8s_control_plane:
+    
+k8s_controllers:
+  children:
+    k8s_control_plane:
+
+nahoku:
+  children:
+    k8s_control_plane:
+

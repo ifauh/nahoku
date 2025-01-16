@@ -1,0 +1,9 @@
+- name: Kubernetes Dependencies
+  hosts: nahoku
+  become: yes
+  tasks:
+    - name: Install Kubectl
+      apt:
+        name: "kubectl={{ kubernetes_version }}.*"
+        state: present
+        force: yes

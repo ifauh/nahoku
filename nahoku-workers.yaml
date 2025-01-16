@@ -1,0 +1,50 @@
+ninja:
+  hosts:
+#    cpu-64x192-[1:4]:
+    cpu-64x192-[1:2]:
+      lv_devices: /dev/sda,/dev/sdb
+      mlx_driver: false
+      containers_lv_size: 500G
+
+epyc:
+  hosts:
+    cpu-64x256-[1:6]:
+      lv_devices: /dev/nvme0n1
+      mlx_driver: true
+      containers_lv_size: 500G
+
+vt100:
+  hosts:
+    gpu-2x-vt100-[1:1]:
+      lv_devices: /dev/nvme0n1
+      mlx_driver: false
+      containers_lv_size: 500G
+
+l40s:
+  hosts:
+    gpu-4x-l40s-[1:1]:
+      lv_devices: /dev/nvme0n1
+      mlx_driver: true
+      containers_lv_size: 500G
+
+suri:
+  hosts:
+    gpu-2x-l40s-[1:3]:
+      lv_devices: /dev/nvme0n1
+      mlx_driver: true
+      containers_lv_size: 500G
+
+k8s_workers:
+  children:
+    test:
+
+#nahoku:
+#  children:
+#    ninja:
+#    epyc:
+#    l40s:
+#    suri:
+#    vt100:
+nahoku:
+  children:
+    ninja:

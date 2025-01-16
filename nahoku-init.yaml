@@ -1,0 +1,32 @@
+- name: Kubernetes HA Control Plane Initialize
+  hosts: k8s_initial_master
+  become: yes
+  tasks:
+    - name: Remove existing /etc/kubernetes/manifests/kube-vip.yaml
+      file:
+        path: /etc/kubernetes/manifests/kube-vip.yaml
+        state: absent
+    - name: "Ensure jq is installed"
+      apt:
+        name: jq
+    - name: "Get default route interface"
+      shell: ip -j route | jq -r '.[] | select(.dst == "default") | .dev'
+      register: kubevip_interface
+    - name: "Generate kube-vip v{{ kubevip_version }} manifest"
+      shell:
+        cmd: >
+          ctr image pull ghcr.io/kube-vip/kube-vip:v{{ kubevip_version }};
+          ctr run --rm --net-host ghcr.io/kube-vip/kube-vip:v{{ kubevip_version }} vip /kube-vip
+          manifest pod 
+          --interface {{ kubevip_interface.stdout }}
+          --address {{ kubevip_ip }}
+          --controlplane
+          --services
+          --arp
+          --leaderElection | tee /etc/kubernetes/manifests/kube-vip.yaml
+        creates: /etc/kubernetes/manifests/kube-vip.yaml
+
+#- name: Kubernetes HA Control Plane Initialize
+#  hosts: k8s_ha_masters
+#  become: yes
+#  tasks:

@@ -1,0 +1,13 @@
+ansible_port: 22
+ansible_user: nahoku
+ansible_become: true
+ansible_become_method: sudo
+ansible_python_interpreter: /usr/bin/python3
+mlx_driver: true
+cluster: nahoku
+kubernetes_version: "1.32"
+beegfs_version: "7.4.5"
+runtime: containerd
+kubevip_version: "0.8.9"
+kubevip_interface: "eno1"
+kubevip_ip: "10.88.11.0"
